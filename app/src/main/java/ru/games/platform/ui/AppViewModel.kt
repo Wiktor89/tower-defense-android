@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import ru.games.platform.BuildConfig
 import ru.games.platform.data.GamesRepository
 import ru.games.platform.data.SessionStore
 import ru.games.platform.data.api.ApiClient
@@ -37,6 +38,9 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
     private val session = SessionStore(app)
     private val repo = GamesRepository(session)
 
+    private val _ready = MutableStateFlow(false)
+    val ready: StateFlow<Boolean> = _ready.asStateFlow()
+
     val baseUrl: StateFlow<String> = session.baseUrl.stateIn(
         viewModelScope,
         SharingStarted.Eagerly,
@@ -59,6 +63,17 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
 
     private val _busy = MutableStateFlow(false)
     val busy: StateFlow<Boolean> = _busy.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            // Зашитый при сборке URL (расшифрован Gradle из server.url.enc)
+            if (session.getBaseUrl().isBlank() && BuildConfig.SERVER_URL.isNotBlank()) {
+                session.setBaseUrl(BuildConfig.SERVER_URL.trimEnd('/'))
+                repo.invalidate()
+            }
+            _ready.value = true
+        }
+    }
 
     fun saveServer(url: String, onOk: () -> Unit) {
         viewModelScope.launch {

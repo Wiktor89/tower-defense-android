@@ -56,6 +56,11 @@ private fun GamesApp(vm: AppViewModel = viewModel()) {
     val auth by vm.auth.collectAsState()
     val serverError by vm.serverError.collectAsState()
     val busy by vm.busy.collectAsState()
+    val ready by vm.ready.collectAsState()
+
+    if (!ready) {
+        return
+    }
 
     val start = when {
         baseUrl.isBlank() -> Routes.Server

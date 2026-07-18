@@ -4,6 +4,9 @@ plugins {
     id("org.jetbrains.kotlin.plugin.compose")
 }
 
+// URL расшифровывается при сборке из config/server.url.enc + ключ local.properties
+val sealedServerUrl: String = ServerUrlCrypto.resolve(rootProject.projectDir)
+
 android {
     namespace = "ru.games.platform"
     compileSdk = 34
@@ -14,6 +17,9 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0.0"
+
+        // В исходниках репозитория plaintext нет — только в скомпилированном BuildConfig
+        buildConfigField("String", "SERVER_URL", "\"${sealedServerUrl.replace("\"", "\\\"")}\"")
     }
 
     buildTypes {
@@ -35,6 +41,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 

@@ -30,7 +30,7 @@ fun ServerScreen(
     onSave: (String) -> Unit,
 ) {
     var url by remember(initialUrl) {
-        mutableStateOf(initialUrl.ifBlank { "http://192.168.0.101:8089" })
+        mutableStateOf(initialUrl)
     }
 
     Column(
@@ -56,7 +56,7 @@ fun ServerScreen(
             value = url,
             onValueChange = { url = it },
             label = { Text("URL сервера") },
-            placeholder = { Text("http://192.168.0.1:8089") },
+            placeholder = { Text("http://host:port") },
             singleLine = true,
             modifier = Modifier.fillMaxWidth(),
             enabled = !busy,

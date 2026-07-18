@@ -1,11 +1,43 @@
-*.iml
+# Gradle
 .gradle/
-/local.properties
-/.idea/
+**/build/
+!buildSrc/src/
+
+# Local secrets / SDK (не коммитить ключ server.url.key)
+local.properties
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+*.swp
+
+# OS
 .DS_Store
-/build/
-/app/build/
-/captures/
+Thumbs.db
+
+# Android / build outputs
+captures/
+outputs/
 *.apk
 *.ap_
+*.aab
 *.dex
+*.class
+*.so
+
+# Kotlin
+*.kotlin_module
+
+# Signing (если появятся)
+*.jks
+*.keystore
+keystore.properties
+
+# Misc
+*.log
+*.hprof
+.cxx/
+.externalNativeBuild/

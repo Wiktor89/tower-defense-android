@@ -1,45 +1,34 @@
 # Мини-игры — Android
 
-Нативное Android-приложение (Kotlin + Jetpack Compose). UI на Android, все данные — через **Go API** проекта `tower-defense`.
+Нативное Android-приложение (Kotlin + Jetpack Compose). UI на Android, данные — через **Go API**.
 
-## Что умеет
+## Адрес сервера (секрет)
 
-- Настройка адреса Go-сервера (`http://IP:8089`)
-- Вход / регистрация + капча (API)
-- Меню игр и «Вызов дня» (API)
-- Запуск игр в WebView на том же сервере (сессия подставляется из нативного логина)
+В репозитории **нет** открытого IP/URL. Хранится только шифротекст:
+
+- `config/server.url.enc` — зашифрованный URL (можно коммитить)
+- `local.properties` → `server.url.key=...` — ключ (**не коммитить**, файл в `.gitignore`)
+
+При `./gradlew assembleDebug` Gradle расшифровывает URL и зашивает в `BuildConfig.SERVER_URL`.
+
+Перевыпустить секрет:
+
+```bash
+./scripts/seal-server-url.sh 'http://HOST:PORT'
+```
+
+Ключ также можно передать через env: `SERVER_URL_KEY=<base64>`.
 
 ## Сборка APK
 
 ```bash
-cd /AndroidStudioProjects/tower-defense-android
 ./gradlew assembleDebug
 ```
 
-APK:
+APK: `app/build/outputs/apk/debug/app-debug.apk`
 
-`app/build/outputs/apk/debug/app-debug.apk`
+## Экраны
 
-Release:
-
-```bash
-./gradlew assembleRelease
-```
-
-Или откройте папку в **Android Studio** → Build → Build APK(s).
-
-## Перед запуском
-
-1. На сервере: `./run.sh` (HTTP).
-2. В приложении укажите URL, например `http://192.168.0.101:8089`.
-3. Телефон и сервер в одной сети; в файрволе открыт порт `8089`.
-
-## Структура
-
-```
-app/src/main/java/ru/games/platform/
-  data/api/     — Retrofit-модели и клиент Go API
-  data/         — SessionStore, GamesRepository
-  ui/           — Compose-экраны
-  MainActivity.kt
-```
+1. Вход / регистрация (+ капча) — Go API  
+2. Меню игр и «Вызов дня» — Go API  
+3. Игры — WebView на том же сервере (сессия из нативного логина)
