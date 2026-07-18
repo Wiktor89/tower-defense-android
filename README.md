@@ -12,7 +12,7 @@
 ## Сборка APK
 
 ```bash
-cd /home/VAfonin1/AndroidStudioProjects/tower-defense-android
+cd /AndroidStudioProjects/tower-defense-android
 ./gradlew assembleDebug
 ```
 
