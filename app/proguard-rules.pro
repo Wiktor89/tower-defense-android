@@ -1,0 +1,2 @@
+-keepattributes Signature
+-keepclassmembers class ru.games.platform.data.api.** { *; }
